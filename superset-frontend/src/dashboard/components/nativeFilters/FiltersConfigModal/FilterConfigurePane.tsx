@@ -18,7 +18,6 @@
  */
 import { styled } from '@superset-ui/core';
 import React from 'react';
-import { NativeFilterType } from '../types';
 import FilterTitlePane from './FilterTitlePane';
 import { FilterRemoval } from './types';
 
@@ -26,8 +25,7 @@ interface Props {
   children: (filterId: string) => React.ReactNode;
   getFilterTitle: (filterId: string) => string;
   onChange: (activeKey: string) => void;
-  onAdd: (type: NativeFilterType) => void;
-  onRemove: (id: string) => void;
+  onEdit: (filterId: string, action: 'add' | 'remove') => void;
   onRearrange: (dragIndex: number, targetIndex: number) => void;
   erroredFilters: string[];
   restoreFilter: (id: string) => void;
@@ -54,10 +52,9 @@ const TitlesContainer = styled.div`
 const FiltureConfigurePane: React.FC<Props> = ({
   getFilterTitle,
   onChange,
-  onRemove,
+  onEdit,
   onRearrange,
   restoreFilter,
-  onAdd,
   erroredFilters,
   children,
   currentFilterId,
@@ -75,9 +72,9 @@ const FiltureConfigurePane: React.FC<Props> = ({
           erroredFilters={erroredFilters}
           getFilterTitle={getFilterTitle}
           onChange={onChange}
-          onAdd={(type: NativeFilterType) => onAdd(type)}
+          onEdit={onEdit}
           onRearrage={onRearrange}
-          onRemove={(id: string) => onRemove(id)}
+          onRemove={(id: string) => onEdit(id, 'remove')}
           restoreFilter={restoreFilter}
         />
       </TitlesContainer>

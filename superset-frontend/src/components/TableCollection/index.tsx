@@ -121,12 +121,6 @@ export const Table = styled.table`
       }
     }
 
-    .empty-loading-bar {
-      display: inline-block;
-      width: 100%;
-      height: 1.2em;
-    }
-
     &:after {
       position: absolute;
       transform: translateY(-50%);
@@ -263,7 +257,7 @@ export default React.memo(
       <tbody {...getTableBodyProps()}>
         {loading &&
           rows.length === 0 &&
-          [...new Array(12)].map((_, i) => (
+          [...new Array(25)].map((_, i) => (
             <tr key={i}>
               {columns.map((column, i2) => {
                 if (column.hidden) return null;
@@ -272,13 +266,12 @@ export default React.memo(
                     key={i2}
                     className={cx('table-cell', {
                       'table-cell-loader': loading,
+                      [column.size || '']: column.size,
                     })}
                   >
-                    <span
-                      className="loading-bar empty-loading-bar"
-                      role="progressbar"
-                      aria-label="loading"
-                    />
+                    <span className="loading-bar" role="progressbar">
+                      <span>LOADING</span>
+                    </span>
                   </td>
                 );
               })}

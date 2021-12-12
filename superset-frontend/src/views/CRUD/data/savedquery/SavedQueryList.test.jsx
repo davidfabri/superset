@@ -111,7 +111,7 @@ const mockImportFile = new File(
 );
 
 fetchMock.get(queriesInfoEndpoint, {
-  permissions: ['can_write', 'can_read', 'can_export'],
+  permissions: ['can_write', 'can_read'],
 });
 fetchMock.get(queriesEndpoint, {
   result: mockqueries,

@@ -22,8 +22,10 @@ import pytest
 from celery.exceptions import SoftTimeLimitExceeded
 from flask import g
 
+from superset import db
+from superset.charts.commands.data import ChartDataCommand
 from superset.charts.commands.exceptions import ChartDataQueryFailedError
-from superset.charts.data.commands.get_data_command import ChartDataCommand
+from superset.connectors.sqla.models import SqlaTable
 from superset.exceptions import SupersetException
 from superset.extensions import async_query_manager, security_manager
 from superset.tasks import async_queries

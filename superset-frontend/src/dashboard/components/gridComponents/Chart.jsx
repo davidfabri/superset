@@ -34,7 +34,6 @@ import {
   LOG_ACTIONS_FORCE_REFRESH_CHART,
 } from 'src/logger/LogUtils';
 import { areObjectsEqual } from 'src/reduxUtils';
-import { FILTER_BOX_MIGRATION_STATES } from 'src/explore/constants';
 
 import SliceHeader from '../SliceHeader';
 import MissingChart from '../MissingChart';
@@ -62,7 +61,6 @@ const propTypes = {
   sliceName: PropTypes.string.isRequired,
   timeout: PropTypes.number.isRequired,
   maxRows: PropTypes.number.isRequired,
-  filterboxMigrationState: FILTER_BOX_MIGRATION_STATES,
   // all active filter fields in dashboard
   filters: PropTypes.object.isRequired,
   refreshChart: PropTypes.func.isRequired,
@@ -104,11 +102,6 @@ const ChartOverlay = styled.div`
   top: 0;
   left: 0;
   z-index: 5;
-
-  &.is-deactivated {
-    opacity: 0.5;
-    background-color: ${({ theme }) => theme.colors.grayscale.light1};
-  }
 `;
 
 export default class Chart extends React.Component {
@@ -252,7 +245,7 @@ export default class Chart extends React.Component {
       formData: isFullCSV
         ? { ...this.props.formData, row_limit: this.props.maxRows }
         : this.props.formData,
-      resultType: 'full',
+      resultType: 'results',
       resultFormat: 'csv',
     });
   }
@@ -300,7 +293,6 @@ export default class Chart extends React.Component {
       filterState,
       handleToggleFullSize,
       isFullSize,
-      filterboxMigrationState,
     } = this.props;
 
     const { width } = this.state;
@@ -312,12 +304,6 @@ export default class Chart extends React.Component {
 
     const { queriesResponse, chartUpdateEndTime, chartStatus } = chart;
     const isLoading = chartStatus === 'loading';
-    const isDeactivatedViz =
-      slice.viz_type === 'filter_box' &&
-      [
-        FILTER_BOX_MIGRATION_STATES.REVIEWING,
-        FILTER_BOX_MIGRATION_STATES.CONVERTED,
-      ].includes(filterboxMigrationState);
     // eslint-disable-next-line camelcase
     const isCached = queriesResponse?.map(({ is_cached }) => is_cached) || [];
     const cachedDttm =
@@ -392,15 +378,15 @@ export default class Chart extends React.Component {
             isOverflowable && 'dashboard-chart--overflowable',
           )}
         >
-          {(isLoading || isDeactivatedViz) && (
+          {isLoading && (
             <ChartOverlay
-              className={cx(isDeactivatedViz && 'is-deactivated')}
               style={{
                 width,
                 height: this.getChartHeight(),
               }}
             />
           )}
+
           <ChartContainer
             width={width}
             height={this.getChartHeight()}
@@ -422,8 +408,6 @@ export default class Chart extends React.Component {
             timeout={timeout}
             triggerQuery={chart.triggerQuery}
             vizType={slice.viz_type}
-            isDeactivatedViz={isDeactivatedViz}
-            filterboxMigrationState={filterboxMigrationState}
           />
         </div>
       </div>

@@ -150,5 +150,5 @@ export const useTableColumns = (
                 } as Column),
             )
         : [],
-    [data, colnames, moreConfigs],
+    [data, moreConfigs],
   );

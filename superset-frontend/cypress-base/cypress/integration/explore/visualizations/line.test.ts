@@ -71,7 +71,7 @@ describe('Visualization > Line', () => {
       .focus()
       .type('bnbColors{enter}');
     cy.get(
-      '.Control[data-test="color_scheme"] .ant-select-selection-item ul[data-test="bnbColors"]',
+      '.Control[data-test="color_scheme"] .ant-select-selection-item > ul[data-test="bnbColors"]',
     ).should('exist');
   });
 
@@ -227,7 +227,6 @@ describe('Visualization > Line', () => {
           value: 'y=140000',
           overrides: { time_range: null },
           show: false,
-          showLabel: false,
           titleColumn: '',
           descriptionColumns: [],
           timeColumn: '',
@@ -264,7 +263,6 @@ describe('Visualization > Line', () => {
               value,
               overrides: { time_range: null },
               show: true,
-              showLabel: false,
               titleColumn: 'ds',
               descriptionColumns: ['ds'],
               timeColumn: 'ds',

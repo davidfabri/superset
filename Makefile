@@ -30,12 +30,7 @@ superset:
 	pip install -e .
 
 	# Create an admin user in your metadata database
-	superset fab create-admin \
-                    --username admin \
-                    --firstname Admin \
-                    --lastname Strator \
-                    --email admin@superset.io \
-                    --password general
+	superset fab create-admin
 
 	# Initialize the database
 	superset db upgrade
@@ -72,7 +67,7 @@ venv:
 	. venv/bin/activate
 
 activate:
-	. venv/bin/activate
+	source venv/bin/activate
 
 pre-commit:
 	# setup pre commit dependencies
@@ -103,6 +98,3 @@ build-cypress:
 open-cypress:
 	if ! [ $(port) ]; then cd superset-frontend/cypress-base; CYPRESS_BASE_URL=http://localhost:9000 npm run cypress open; fi
 	cd superset-frontend/cypress-base; CYPRESS_BASE_URL=http://localhost:$(port) npm run cypress open
-
-admin-user:
-	superset fab create-admin

@@ -57,9 +57,7 @@ def get_physical_table_metadata(
                 db_type = db_engine_spec.column_datatype_to_string(
                     col["type"], db_dialect
                 )
-                type_spec = db_engine_spec.get_column_spec(
-                    db_type, db_extra=database.get_extra()
-                )
+                type_spec = db_engine_spec.get_column_spec(db_type)
                 col.update(
                     {
                         "type": db_type,

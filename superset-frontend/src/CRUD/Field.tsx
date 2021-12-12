@@ -44,10 +44,10 @@ export default function Field<V>({
   fieldKey,
   value,
   label,
-  description = null,
+  description,
   control,
-  onChange = () => {},
-  compact = false,
+  onChange,
+  compact,
   inline,
 }: FieldProps<V>) {
   const onControlChange = useCallback(

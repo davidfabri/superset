@@ -153,7 +153,7 @@ function ExecutionLog({ addDangerToast, isReportEnabled }: ExecutionLogProps) {
         name={
           <StyledHeader>
             <span>
-              {alertResource?.type} {alertResource?.name}
+              {t(`${alertResource?.type}`)} {alertResource?.name}
             </span>
             <span>
               <Link to={path}>Back to all</Link>

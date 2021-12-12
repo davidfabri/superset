@@ -153,18 +153,10 @@ export function useTransformedResource<IN, OUT>(
       // While incomplete, there is no result - no need to transform.
       return resource;
     }
-    try {
-      return {
-        ...resource,
-        result: transformFn(resource.result),
-      };
-    } catch (e) {
-      return {
-        status: ResourceStatus.ERROR,
-        result: null,
-        error: e,
-      };
-    }
+    return {
+      ...resource,
+      result: transformFn(resource.result),
+    };
   }, [resource, transformFn]);
 }
 

@@ -26,7 +26,6 @@ import { FilterSet } from 'src/dashboard/reducers/types';
 import { getFilterValueForDisplay } from './utils';
 import { useFilters } from '../state';
 import { getFilterBarTestId } from '../index';
-import { NativeFilterType } from '../../types';
 
 const FilterHeader = styled.div`
   display: flex;
@@ -69,9 +68,7 @@ export type FiltersHeaderProps = {
 const FiltersHeader: FC<FiltersHeaderProps> = ({ dataMask, filterSet }) => {
   const theme = useTheme();
   const filters = useFilters();
-  const filterValues = Object.values(filters).filter(
-    nativeFilter => nativeFilter.type === NativeFilterType.NATIVE_FILTER,
-  );
+  const filterValues = Object.values(filters);
 
   let resultFilters = filterValues ?? [];
   if (filterSet?.nativeFilters) {

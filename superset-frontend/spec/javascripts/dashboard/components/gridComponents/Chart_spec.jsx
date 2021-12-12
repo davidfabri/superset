@@ -116,7 +116,7 @@ describe('Chart', () => {
     expect(stubbedExportCSV.lastCall.args[0]).toEqual(
       expect.objectContaining({
         formData: expect.anything(),
-        resultType: 'full',
+        resultType: 'results',
         resultFormat: 'csv',
       }),
     );

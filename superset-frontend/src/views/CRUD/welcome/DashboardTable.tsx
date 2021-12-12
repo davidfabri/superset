@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SupersetClient, t } from '@superset-ui/core';
 import { filter } from 'lodash';
-import { useFavoriteStatus, useListViewResource } from 'src/views/CRUD/hooks';
+import { useListViewResource, useFavoriteStatus } from 'src/views/CRUD/hooks';
 import {
   Dashboard,
   DashboardTableProps,
@@ -28,13 +28,13 @@ import {
 import handleResourceExport from 'src/utils/export';
 import { useHistory } from 'react-router-dom';
 import {
-  getFromLocalStorage,
   setInLocalStorage,
+  getFromLocalStorage,
 } from 'src/utils/localStorageHelpers';
 import { LoadingCards } from 'src/views/CRUD/welcome/Welcome';
 import {
-  CardContainer,
   createErrorHandler,
+  CardContainer,
   PAGE_SIZE,
 } from 'src/views/CRUD/utils';
 import { HOMEPAGE_DASHBOARD_FILTER } from 'src/views/CRUD/storageKeys';
@@ -44,7 +44,6 @@ import PropertiesModal from 'src/dashboard/components/PropertiesModal';
 import DashboardCard from 'src/views/CRUD/dashboard/DashboardCard';
 import SubMenu from 'src/components/Menu/SubMenu';
 import EmptyState from './EmptyState';
-import { WelcomeTable } from './types';
 
 export interface FilterValue {
   col: string;
@@ -207,7 +206,7 @@ function DashboardTable({
             name: (
               <>
                 <i className="fa fa-plus" />
-                {t('Dashboard')}
+                Dashboard
               </>
             ),
             buttonStyle: 'tertiary',
@@ -216,7 +215,7 @@ function DashboardTable({
             },
           },
           {
-            name: t('View All »'),
+            name: 'View All »',
             buttonStyle: 'link',
             onClick: () => {
               const target =
@@ -264,7 +263,7 @@ function DashboardTable({
         </CardContainer>
       )}
       {dashboards.length === 0 && (
-        <EmptyState tableName={WelcomeTable.Dashboards} tab={dashboardFilter} />
+        <EmptyState tableName="DASHBOARDS" tab={dashboardFilter} />
       )}
       {preparingExport && <Loading />}
     </>

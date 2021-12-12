@@ -35,7 +35,6 @@ import downloadAsImage from 'src/utils/downloadAsImage';
 import getDashboardUrl from 'src/dashboard/util/getDashboardUrl';
 import { getActiveFilters } from 'src/dashboard/util/activeDashboardFilters';
 import { getUrlParam } from 'src/utils/urlUtils';
-import { FILTER_BOX_MIGRATION_STATES } from 'src/explore/constants';
 
 const propTypes = {
   addSuccessToast: PropTypes.func.isRequired,
@@ -66,7 +65,6 @@ const propTypes = {
   refreshLimit: PropTypes.number,
   refreshWarning: PropTypes.string,
   lastModifiedTime: PropTypes.number.isRequired,
-  filterboxMigrationState: FILTER_BOX_MIGRATION_STATES,
 };
 
 const defaultProps = {
@@ -74,7 +72,6 @@ const defaultProps = {
   colorScheme: undefined,
   refreshLimit: 0,
   refreshWarning: null,
-  filterboxMigrationState: FILTER_BOX_MIGRATION_STATES.NOOP,
 };
 
 const MENU_KEYS = {
@@ -212,7 +209,6 @@ class HeaderActionsDropdown extends React.PureComponent {
       lastModifiedTime,
       addSuccessToast,
       addDangerToast,
-      filterboxMigrationState,
     } = this.props;
 
     const emailTitle = t('Superset dashboard');
@@ -287,15 +283,14 @@ class HeaderActionsDropdown extends React.PureComponent {
           />
         </Menu.Item>
 
-        {editMode &&
-          filterboxMigrationState !== FILTER_BOX_MIGRATION_STATES.CONVERTED && (
-            <Menu.Item key={MENU_KEYS.SET_FILTER_MAPPING}>
-              <FilterScopeModal
-                className="m-r-5"
-                triggerNode={t('Set filter mapping')}
-              />
-            </Menu.Item>
-          )}
+        {editMode && (
+          <Menu.Item key={MENU_KEYS.SET_FILTER_MAPPING}>
+            <FilterScopeModal
+              className="m-r-5"
+              triggerNode={t('Set filter mapping')}
+            />
+          </Menu.Item>
+        )}
 
         {editMode && (
           <Menu.Item key={MENU_KEYS.EDIT_PROPERTIES}>

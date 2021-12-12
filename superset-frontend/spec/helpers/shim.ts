@@ -23,13 +23,10 @@ import 'jest-enzyme';
 import jQuery from 'jquery';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-// https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options
-// in order to mock modules in test case, so avoid absolute import module
-import { configure as configureTranslation } from '../../packages/superset-ui-core/src/translation';
+import { configure as configureTranslation } from '@superset-ui/core';
 import { Worker } from './Worker';
 import { IntersectionObserver } from './IntersectionObserver';
 import setupSupersetClient from './setupSupersetClient';
-import CacheStorage from './CacheStorage';
 
 configure({ adapter: new Adapter() });
 
@@ -52,7 +49,6 @@ g.window.performance = { now: () => new Date().getTime() };
 g.window.Worker = Worker;
 g.window.IntersectionObserver = IntersectionObserver;
 g.URL.createObjectURL = () => '';
-g.caches = new CacheStorage();
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

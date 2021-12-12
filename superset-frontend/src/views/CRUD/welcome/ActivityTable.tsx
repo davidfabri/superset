@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { styled, t } from '@superset-ui/core';
 import { setInLocalStorage } from 'src/utils/localStorageHelpers';
 
 import ListViewCard from 'src/components/ListViewCard';
 import SubMenu from 'src/components/Menu/SubMenu';
-import { ActivityData, LoadingCards } from 'src/views/CRUD/welcome/Welcome';
+import { LoadingCards, ActivityData } from 'src/views/CRUD/welcome/Welcome';
 import {
-  CardContainer,
   CardStyles,
   getEditedObjects,
+  CardContainer,
 } from 'src/views/CRUD/utils';
 import { HOMEPAGE_ACTIVITY_FILTER } from 'src/views/CRUD/storageKeys';
 import { Chart } from 'src/types/Chart';
@@ -36,7 +36,6 @@ import { Dashboard, SavedQueryObject } from 'src/views/CRUD/types';
 import Icons from 'src/components/Icons';
 
 import EmptyState from './EmptyState';
-import { WelcomeTable } from './types';
 
 /**
  * Return result from /superset/recent_activity/{user_id}
@@ -120,14 +119,33 @@ const getEntityUrl = (entity: ActivityObject) => {
 };
 
 const getEntityLastActionOn = (entity: ActivityObject) => {
-  if ('time' in entity) {
-    return t('Viewed %s', moment(entity.time).fromNow());
+  // translation keys for last action on
+  const LAST_VIEWED = `Viewed %s`;
+  const LAST_MODIFIED = `Modified %s`;
+
+  // for Recent viewed items
+  if ('time_delta_humanized' in entity) {
+    return t(LAST_VIEWED, entity.time_delta_humanized);
+  }
+
+  if ('changed_on_delta_humanized' in entity) {
+    return t(LAST_MODIFIED, entity.changed_on_delta_humanized);
   }
 
   let time: number | string | undefined | null;
+  let translationKey = LAST_MODIFIED;
+  if ('time' in entity) {
+    // eslint-disable-next-line prefer-destructuring
+    time = entity.time;
+    translationKey = LAST_VIEWED;
+  }
   if ('changed_on' in entity) time = entity.changed_on;
   if ('changed_on_utc' in entity) time = entity.changed_on_utc;
-  return t('Modified %s', time == null ? UNKNOWN_TIME : moment(time).fromNow());
+
+  return t(
+    translationKey,
+    time == null ? UNKNOWN_TIME : moment(time).fromNow(),
+  );
 };
 
 export default function ActivityTable({
@@ -223,7 +241,7 @@ export default function ActivityTable({
           {renderActivity()}
         </CardContainer>
       ) : (
-        <EmptyState tableName={WelcomeTable.Recents} tab={activeChild} />
+        <EmptyState tableName="RECENTS" tab={activeChild} />
       )}
     </Styles>
   );

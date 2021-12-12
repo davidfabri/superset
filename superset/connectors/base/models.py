@@ -26,7 +26,6 @@ from sqlalchemy.orm import foreign, Query, relationship, RelationshipProperty, S
 
 from superset import is_feature_enabled, security_manager
 from superset.constants import NULL_STRING
-from superset.datasets.commands.exceptions import DatasetNotFoundError
 from superset.models.helpers import AuditMixinNullable, ImportExportMixin, QueryResult
 from superset.models.slice import Slice
 from superset.typing import FilterValue, FilterValues, QueryObjectDict
@@ -320,17 +319,12 @@ class BaseDatasource(
                 if "column" in filter_config
             )
 
-            # for legacy dashboard imports which have the wrong query_context in them
-            try:
-                query_context = slc.get_query_context()
-            except DatasetNotFoundError:
-                query_context = None
-
             # legacy charts don't have query_context charts
+            query_context = slc.get_query_context()
             if query_context:
                 column_names.update(
                     [
-                        utils.get_column_name(column)
+                        column
                         for query in query_context.queries
                         for column in query.columns
                     ]

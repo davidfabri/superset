@@ -33,10 +33,7 @@ import { DataMaskStateWithId, DataMaskWithId } from 'src/dataMask/types';
 import { useImmer } from 'use-immer';
 import { isEmpty, isEqual } from 'lodash';
 import { testWithId } from 'src/utils/testUtils';
-import {
-  Filter,
-  NativeFilterType,
-} from 'src/dashboard/components/nativeFilters/types';
+import { Filter } from 'src/dashboard/components/nativeFilters/types';
 import Loading from 'src/components/Loading';
 import { getInitialDataMask } from 'src/dataMask/reducer';
 import { URL_PARAMS } from 'src/constants';
@@ -85,6 +82,7 @@ const Bar = styled.div<{ width: number }>`
   border-bottom: 1px solid ${({ theme }) => theme.colors.grayscale.light2};
   min-height: 100%;
   display: none;
+
   &.open {
     display: flex;
   }
@@ -99,12 +97,14 @@ const CollapsedBar = styled.div<{ offset: number }>`
   padding-top: ${({ theme }) => theme.gridUnit * 2}px;
   display: none;
   text-align: center;
+
   &.open {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: ${({ theme }) => theme.gridUnit * 2}px;
   }
+
   svg {
     cursor: pointer;
   }
@@ -151,8 +151,9 @@ const FilterBar: React.FC<FiltersBarProps> = ({
   const history = useHistory();
   const dataMaskApplied: DataMaskStateWithId = useNativeFiltersDataMask();
   const [editFilterSetId, setEditFilterSetId] = useState<number | null>(null);
-  const [dataMaskSelected, setDataMaskSelected] =
-    useImmer<DataMaskStateWithId>(dataMaskApplied);
+  const [dataMaskSelected, setDataMaskSelected] = useImmer<DataMaskStateWithId>(
+    dataMaskApplied,
+  );
   const dispatch = useDispatch();
   const filterSets = useFilterSets();
   const filterSetFilterValues = Object.values(filterSets);
@@ -266,10 +267,9 @@ const FilterBar: React.FC<FiltersBarProps> = ({
     });
   }, [dataMaskSelected, dispatch]);
 
-  const openFiltersBar = useCallback(
-    () => toggleFiltersBar(true),
-    [toggleFiltersBar],
-  );
+  const openFiltersBar = useCallback(() => toggleFiltersBar(true), [
+    toggleFiltersBar,
+  ]);
 
   useFilterUpdates(dataMaskSelected, setDataMaskSelected);
   const isApplyDisabled = checkIsApplyDisabled(
@@ -278,11 +278,8 @@ const FilterBar: React.FC<FiltersBarProps> = ({
     filterValues,
   );
   const isInitialized = useInitialization();
-  const tabPaneStyle = useMemo(() => ({ overflow: 'auto', height }), [height]);
 
-  const numberOfFilters = filterValues.filter(
-    filterValue => filterValue.type === NativeFilterType.NATIVE_FILTER,
-  ).length;
+  const tabPaneStyle = useMemo(() => ({ overflow: 'auto', height }), [height]);
 
   return (
     <BarWrapper
@@ -323,9 +320,7 @@ const FilterBar: React.FC<FiltersBarProps> = ({
             activeKey={editFilterSetId ? TabIds.AllFilters : undefined}
           >
             <Tabs.TabPane
-              tab={t('All filters (%(filterCount)d)', {
-                filterCount: numberOfFilters,
-              })}
+              tab={t(`All Filters (${filterValues.length})`)}
               key={TabIds.AllFilters}
               css={tabPaneStyle}
             >
@@ -345,9 +340,7 @@ const FilterBar: React.FC<FiltersBarProps> = ({
             </Tabs.TabPane>
             <Tabs.TabPane
               disabled={!!editFilterSetId}
-              tab={t('Filter sets (%(filterSetCount)d)', {
-                filterSetCount: filterSetFilterValues.length,
-              })}
+              tab={t(`Filter Sets (${filterSetFilterValues.length})`)}
               key={TabIds.FilterSets}
               css={tabPaneStyle}
             >

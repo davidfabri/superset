@@ -30,7 +30,7 @@ import { Select } from 'src/components';
 import { FormLabel } from 'src/components/Form';
 import Button from 'src/components/Button';
 import Tabs from 'src/components/Tabs';
-import CertifiedBadge from 'src/components/CertifiedBadge';
+import CertifiedIcon from 'src/components/CertifiedIcon';
 import WarningIconWithTooltip from 'src/components/WarningIconWithTooltip';
 import DatabaseSelector from 'src/components/DatabaseSelector';
 import Label from 'src/components/Label';
@@ -292,7 +292,7 @@ function ColumnCollectionTable({
           editableColumnName ? (
             <StyledLabelWrapper>
               {record.is_certified && (
-                <CertifiedBadge
+                <CertifiedIcon
                   certifiedBy={record.certified_by}
                   details={record.certification_details}
                 />
@@ -302,7 +302,7 @@ function ColumnCollectionTable({
           ) : (
             <StyledLabelWrapper>
               {record.is_certified && (
-                <CertifiedBadge
+                <CertifiedIcon
                   certifiedBy={record.certified_by}
                   details={record.certification_details}
                 />
@@ -452,8 +452,9 @@ class DatasourceEditor extends React.PureComponent {
     this.onChangeEditMode = this.onChangeEditMode.bind(this);
     this.onDatasourcePropChange = this.onDatasourcePropChange.bind(this);
     this.onDatasourceChange = this.onDatasourceChange.bind(this);
-    this.tableChangeAndSyncMetadata =
-      this.tableChangeAndSyncMetadata.bind(this);
+    this.tableChangeAndSyncMetadata = this.tableChangeAndSyncMetadata.bind(
+      this,
+    );
     this.syncMetadata = this.syncMetadata.bind(this);
     this.setColumns = this.setColumns.bind(this);
     this.validateAndChange = this.validateAndChange.bind(this);
@@ -1113,7 +1114,7 @@ class DatasourceEditor extends React.PureComponent {
           metric_name: (v, onChange, _, record) => (
             <FlexRowContainer>
               {record.is_certified && (
-                <CertifiedBadge
+                <CertifiedIcon
                   certifiedBy={record.certified_by}
                   details={record.certification_details}
                 />

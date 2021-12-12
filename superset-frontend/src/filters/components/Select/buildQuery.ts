@@ -19,8 +19,6 @@
 import {
   buildQueryContext,
   GenericDataType,
-  getColumnLabel,
-  isPhysicalColumn,
   QueryObject,
   QueryObjectFilterClause,
   BuildQuery,
@@ -37,16 +35,15 @@ const buildQuery: BuildQuery<PluginFilterSelectQueryFormData> = (
     const { columns = [], filters = [] } = baseQueryObject;
     const extraFilters: QueryObjectFilterClause[] = [];
     if (search) {
-      columns.filter(isPhysicalColumn).forEach(column => {
-        const label = getColumnLabel(column);
-        if (coltypeMap[label] === GenericDataType.STRING) {
+      columns.forEach(column => {
+        if (coltypeMap[column] === GenericDataType.STRING) {
           extraFilters.push({
             col: column,
             op: 'ILIKE',
             val: `%${search}%`,
           });
         } else if (
-          coltypeMap[label] === GenericDataType.NUMERIC &&
+          coltypeMap[column] === GenericDataType.NUMERIC &&
           !Number.isNaN(Number(search))
         ) {
           // for numeric columns we apply a >= where clause

@@ -121,12 +121,11 @@ const Header: FC<HeaderProps> = ({
           <Icons.Expand iconColor={theme.colors.grayscale.base} />
         </HeaderButton>
       </TitleArea>
-      <ActionButtons className="filter-action-buttons">
+      <ActionButtons>
         <Button
           disabled={isClearAllDisabled}
           buttonStyle="tertiary"
           buttonSize="small"
-          className="filter-clear-all-button"
           onClick={onClearAll}
           {...getFilterBarTestId('clear-button')}
         >
@@ -137,7 +136,6 @@ const Header: FC<HeaderProps> = ({
           buttonStyle="primary"
           htmlType="submit"
           buttonSize="small"
-          className="filter-apply-button"
           onClick={onApply}
           {...getFilterBarTestId('apply-button')}
         >

@@ -20,20 +20,19 @@
 import { DataMaskStateWithId } from 'src/dataMask/types';
 import { areObjectsEqual } from 'src/reduxUtils';
 import { FilterState } from '@superset-ui/core';
-import { Filter, Divider } from '../types';
+import { Filter } from '../types';
 
 export enum TabIds {
   AllFilters = 'allFilters',
   FilterSets = 'filterSets',
 }
 
-export function mapParentFiltersToChildren(filters: Array<Filter | Divider>): {
-  [id: string]: Filter[];
-} {
+export function mapParentFiltersToChildren(
+  filters: Filter[],
+): { [id: string]: Filter[] } {
   const cascadeChildren = {};
   filters.forEach(filter => {
-    const [parentId] =
-      ('cascadeParentIds' in filter && filter.cascadeParentIds) || [];
+    const [parentId] = filter.cascadeParentIds || [];
     if (parentId) {
       if (!cascadeChildren[parentId]) {
         cascadeChildren[parentId] = [];

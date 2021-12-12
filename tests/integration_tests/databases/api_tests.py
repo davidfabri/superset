@@ -744,7 +744,9 @@ class TestDatabaseApi(SupersetTestCase):
         rv = self.get_assert_metric(uri, "info")
         data = json.loads(rv.data.decode("utf-8"))
         assert rv.status_code == 200
-        assert set(data["permissions"]) == {"can_read", "can_write", "can_export"}
+        assert "can_read" in data["permissions"]
+        assert "can_write" in data["permissions"]
+        assert len(data["permissions"]) == 2
 
     def test_get_invalid_database_table_metadata(self):
         """
@@ -1141,7 +1143,9 @@ class TestDatabaseApi(SupersetTestCase):
         argument = [database.id]
         uri = f"api/v1/database/export/?q={prison.dumps(argument)}"
         rv = self.client.get(uri)
-        assert rv.status_code == 403
+        # export only requires can_read now, but gamma need to have explicit access to
+        # view the database
+        assert rv.status_code == 404
 
     def test_export_database_non_existing(self):
         """

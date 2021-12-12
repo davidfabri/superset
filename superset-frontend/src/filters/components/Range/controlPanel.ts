@@ -22,7 +22,6 @@ import {
   sections,
   sharedControls,
 } from '@superset-ui/chart-controls';
-import { SingleValueType } from './SingleValueType';
 
 const config: ControlPanelConfig = {
   controlPanelSections: [
@@ -56,16 +55,6 @@ const config: ControlPanelConfig = {
               default: false,
               renderTrigger: true,
               description: t('User must select a value for this filter.'),
-            },
-          },
-          {
-            name: 'enableSingleValue',
-            config: {
-              type: 'CheckboxControl',
-              label: t('Single value'),
-              default: SingleValueType.Exact,
-              renderTrigger: true,
-              description: t('Use only a single value.'),
             },
           },
         ],

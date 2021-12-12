@@ -71,11 +71,12 @@ export type ThemeConfig = {
   colors: {
     // add known colors
     [key in keyof typeof reactSelectColors]: string;
-  } & {
-    [key in keyof ReturnType<typeof colors>]: string;
-  } & {
-    [key: string]: string; // any other colors
-  };
+  } &
+    {
+      [key in keyof ReturnType<typeof colors>]: string;
+    } & {
+      [key: string]: string; // any other colors
+    };
   spacing: Theme['spacing'] & {
     // line height and font size must be pixels for easier computation
     // of option item height in WindowedMenuList
@@ -88,20 +89,21 @@ export type ThemeConfig = {
 
 export type PartialThemeConfig = RecursivePartial<ThemeConfig>;
 
-export const defaultTheme: (theme: SupersetTheme) => PartialThemeConfig =
-  theme => ({
-    borderRadius: theme.borderRadius,
-    zIndex: 11,
-    colors: colors(theme),
-    spacing: {
-      baseUnit: 3,
-      menuGutter: 0,
-      controlHeight: 34,
-      lineHeight: 19,
-      fontSize: 14,
-      minWidth: '6.5em',
-    },
-  });
+export const defaultTheme: (
+  theme: SupersetTheme,
+) => PartialThemeConfig = theme => ({
+  borderRadius: theme.borderRadius,
+  zIndex: 11,
+  colors: colors(theme),
+  spacing: {
+    baseUnit: 3,
+    menuGutter: 0,
+    controlHeight: 34,
+    lineHeight: 19,
+    fontSize: 14,
+    minWidth: '6.5em',
+  },
+});
 
 // let styles accept serialized CSS, too
 type CSSStyles = CSSProperties | SerializedStyles;
@@ -312,8 +314,13 @@ export type InputProps = ReactSelectInputProps & {
   inputStyle?: object;
 };
 
-const { ClearIndicator, DropdownIndicator, Option, Input, SelectContainer } =
-  defaultComponents as Required<DeepNonNullable<SelectComponentsType>>;
+const {
+  ClearIndicator,
+  DropdownIndicator,
+  Option,
+  Input,
+  SelectContainer,
+} = defaultComponents as Required<DeepNonNullable<SelectComponentsType>>;
 
 export const DEFAULT_COMPONENTS: SelectComponentsType = {
   SelectContainer: ({ children, ...props }) => {

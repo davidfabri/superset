@@ -34,11 +34,13 @@ from superset.utils.core import get_example_database
 
 from .base_tests import SupersetTestCase
 
-PRESTO_SQL_VALIDATORS_BY_ENGINE = {
-    "presto": "PrestoDBSQLValidator",
-    "sqlite": "PrestoDBSQLValidator",
-    "postgresql": "PrestoDBSQLValidator",
-    "mysql": "PrestoDBSQLValidator",
+PRESTO_TEST_FEATURE_FLAGS = {
+    "SQL_VALIDATORS_BY_ENGINE": {
+        "presto": "PrestoDBSQLValidator",
+        "sqlite": "PrestoDBSQLValidator",
+        "postgresql": "PrestoDBSQLValidator",
+        "mysql": "PrestoDBSQLValidator",
+    }
 }
 
 
@@ -63,8 +65,8 @@ class TestSqlValidatorEndpoint(SupersetTestCase):
 
     @patch("superset.views.core.get_validator_by_name")
     @patch.dict(
-        "superset.config.SQL_VALIDATORS_BY_ENGINE",
-        PRESTO_SQL_VALIDATORS_BY_ENGINE,
+        "superset.extensions.feature_flag_manager._feature_flags",
+        PRESTO_TEST_FEATURE_FLAGS,
         clear=True,
     )
     def test_validate_sql_endpoint_mocked(self, get_validator_by_name):
@@ -96,8 +98,8 @@ class TestSqlValidatorEndpoint(SupersetTestCase):
 
     @patch("superset.views.core.get_validator_by_name")
     @patch.dict(
-        "superset.config.SQL_VALIDATORS_BY_ENGINE",
-        PRESTO_SQL_VALIDATORS_BY_ENGINE,
+        "superset.extensions.feature_flag_manager._feature_flags",
+        PRESTO_TEST_FEATURE_FLAGS,
         clear=True,
     )
     def test_validate_sql_endpoint_failure(self, get_validator_by_name):

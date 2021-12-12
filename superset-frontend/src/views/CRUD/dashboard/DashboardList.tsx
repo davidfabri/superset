@@ -49,7 +49,6 @@ import ImportModelsModal from 'src/components/ImportModal/index';
 import OmniContainer from 'src/components/OmniContainer';
 
 import Dashboard from 'src/dashboard/containers/Dashboard';
-import CertifiedBadge from 'src/components/CertifiedBadge';
 import DashboardCard from './DashboardCard';
 import { DashboardStatus } from './types';
 
@@ -149,7 +148,7 @@ function DashboardList(props: DashboardListProps) {
   const canCreate = hasPerm('can_write');
   const canEdit = hasPerm('can_write');
   const canDelete = hasPerm('can_write');
-  const canExport = hasPerm('can_export');
+  const canExport = hasPerm('can_read');
 
   const initialSort = [{ id: 'changed_on_delta_humanized', desc: true }];
 
@@ -174,8 +173,6 @@ function DashboardList(props: DashboardListProps) {
                 json_metadata = '',
                 changed_on_delta_humanized,
                 url = '',
-                certified_by = '',
-                certification_details = '',
               } = json.result;
               return {
                 ...dashboard,
@@ -187,8 +184,6 @@ function DashboardList(props: DashboardListProps) {
                 json_metadata,
                 changed_on_delta_humanized,
                 url,
-                certified_by,
-                certification_details,
               };
             }
             return dashboard;
@@ -255,26 +250,9 @@ function DashboardList(props: DashboardListProps) {
       {
         Cell: ({
           row: {
-            original: {
-              url,
-              dashboard_title: dashboardTitle,
-              certified_by: certifiedBy,
-              certification_details: certificationDetails,
-            },
+            original: { url, dashboard_title: dashboardTitle },
           },
-        }: any) => (
-          <Link to={url}>
-            {certifiedBy && (
-              <>
-                <CertifiedBadge
-                  certifiedBy={certifiedBy}
-                  details={certificationDetails}
-                />{' '}
-              </>
-            )}
-            {dashboardTitle}
-          </Link>
-        ),
+        }: any) => <Link to={url}>{dashboardTitle}</Link>,
         Header: t('Title'),
         accessor: 'dashboard_title',
       },
@@ -500,18 +478,6 @@ function DashboardList(props: DashboardListProps) {
         ],
       },
       ...(props.user.userId ? [favoritesFilter] : []),
-      {
-        Header: t('Certified'),
-        id: 'id',
-        urlDisplay: 'certified',
-        input: 'select',
-        operator: FilterOperator.dashboardIsCertified,
-        unfilteredLabel: t('Any'),
-        selects: [
-          { label: t('Yes'), value: true },
-          { label: t('No'), value: false },
-        ],
-      },
       {
         Header: t('Search'),
         id: 'dashboard_title',

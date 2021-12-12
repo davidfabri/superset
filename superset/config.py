@@ -191,7 +191,7 @@ QUERY_SEARCH_LIMIT = 1000
 WTF_CSRF_ENABLED = True
 
 # Add endpoints that need to be exempt from CSRF protection
-WTF_CSRF_EXEMPT_LIST = ["superset.views.core.log", "superset.charts.data.api.data"]
+WTF_CSRF_EXEMPT_LIST = ["superset.views.core.log", "superset.charts.api.data"]
 
 # Whether to run the web server in debug mode or not
 DEBUG = os.environ.get("FLASK_ENV") == "development"
@@ -286,8 +286,6 @@ AUTH_TYPE = AUTH_DB
 #    { 'name': 'Yahoo', 'url': 'https://open.login.yahoo.com/' },
 #    { 'name': 'Flickr', 'url': 'https://www.flickr.com/<username>' },
 
-AUTH_STRICT_RESPONSE_CODES = True
-
 # ---------------------------------------------------
 # Roles config
 # ---------------------------------------------------
@@ -316,7 +314,6 @@ LANGUAGES = {
     "pt_BR": {"flag": "br", "name": "Brazilian Portuguese"},
     "ru": {"flag": "ru", "name": "Russian"},
     "ko": {"flag": "kr", "name": "Korean"},
-    "sk": {"flag": "sk", "name": "Slovak"},
     "sl": {"flag": "si", "name": "Slovenian"},
 }
 # Turning off i18n by default as translation in most languages are
@@ -395,7 +392,6 @@ DEFAULT_FEATURE_FLAGS: Dict[str, bool] = {
     "OMNIBAR": False,
     "DASHBOARD_RBAC": False,
     "ENABLE_EXPLORE_DRAG_AND_DROP": False,
-    "ENABLE_FILTER_BOX_MIGRATION": False,
     "ENABLE_DND_WITH_CLICK_UX": False,
     # Enabling ALERTS_ATTACH_REPORTS, the system sends email and slack message
     # with screenshot and link
@@ -562,15 +558,6 @@ CACHE_CONFIG: CacheConfig = {"CACHE_TYPE": "null"}
 
 # Cache for datasource metadata and query results
 DATA_CACHE_CONFIG: CacheConfig = {"CACHE_TYPE": "null"}
-
-# Cache for filters state
-FILTER_STATE_CACHE_CONFIG: CacheConfig = {
-    "CACHE_TYPE": "filesystem",
-    "CACHE_DIR": os.path.join(DATA_DIR, "cache"),
-    "CACHE_DEFAULT_TIMEOUT": int(timedelta(days=90).total_seconds()),
-    "CACHE_THRESHOLD": 0,
-    "REFRESH_TIMEOUT_ON_RETRIEVAL": True,
-}
 
 # store cache keys by datasource UID (via CacheKey) for custom processing/invalidation
 STORE_CACHE_KEYS_IN_METADATA_DB = False
@@ -810,12 +797,10 @@ ESTIMATE_QUERY_COST = False
 #
 #     return out
 #
-#  Then on define the formatter on the config:
-#
-# "QUERY_COST_FORMATTERS_BY_ENGINE": {"postgresql": postgres_query_cost_formatter},
-QUERY_COST_FORMATTERS_BY_ENGINE: Dict[
-    str, Callable[[List[Dict[str, Any]]], List[Dict[str, Any]]]
-] = {}
+# FEATURE_FLAGS = {
+#     "ESTIMATE_QUERY_COST": True,
+#     "QUERY_COST_FORMATTERS_BY_ENGINE": {"postgresql": postgres_query_cost_formatter},
+# }
 
 # Flag that controls if limit should be enforced on the CTA (create table as queries).
 SQLLAB_CTAS_NO_LIMIT = False
@@ -1099,11 +1084,7 @@ EMAIL_REPORTS_USER = "admin"
 WEBDRIVER_TYPE = "firefox"
 
 # Window size - this will impact the rendering of the data
-WEBDRIVER_WINDOW = {
-    "dashboard": (1600, 2000),
-    "slice": (3000, 1200),
-    "pixel_density": 1,
-}
+WEBDRIVER_WINDOW = {"dashboard": (1600, 2000), "slice": (3000, 1200)}
 
 # An optional override to the default auth hook used to provide auth to the
 # offline webdriver
@@ -1294,9 +1275,6 @@ MENU_HIDE_USER_INFO = False
 # SQLalchemy link doc reference
 SQLALCHEMY_DOCS_URL = "https://docs.sqlalchemy.org/en/13/core/engines.html"
 SQLALCHEMY_DISPLAY_TEXT = "SQLAlchemy docs"
-
-# Set to False to only allow viewing own recent activity
-ENABLE_BROAD_ACTIVITY_ACCESS = True
 
 # -------------------------------------------------------------------
 # *                WARNING:  STOP EDITING  HERE                    *

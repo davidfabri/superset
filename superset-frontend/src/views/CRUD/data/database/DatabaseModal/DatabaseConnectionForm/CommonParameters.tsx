@@ -42,9 +42,9 @@ export const hostField = ({
     )}
     validationMethods={{ onBlur: getValidation }}
     errorMessage={validationErrors?.host}
-    placeholder={t('e.g. 127.0.0.1')}
+    placeholder="e.g. 127.0.0.1"
     className="form-group-w-50"
-    label={t('Host')}
+    label="Host"
     onChange={changeMethods.onParametersChange}
   />
 );
@@ -64,7 +64,7 @@ export const portField = ({
       value={db?.parameters?.port as number}
       validationMethods={{ onBlur: getValidation }}
       errorMessage={validationErrors?.port}
-      placeholder={t('e.g. 5432')}
+      placeholder="e.g. 5432"
       className="form-group-w-50"
       label="Port"
       onChange={changeMethods.onParametersChange}
@@ -85,8 +85,8 @@ export const databaseField = ({
     value={db?.parameters?.database}
     validationMethods={{ onBlur: getValidation }}
     errorMessage={validationErrors?.database}
-    placeholder={t('e.g. world_population')}
-    label={t('Database name')}
+    placeholder="e.g. world_population"
+    label="Database name"
     onChange={changeMethods.onParametersChange}
     helpText={t('Copy the name of the  database you are trying to connect to.')}
   />
@@ -105,8 +105,8 @@ export const usernameField = ({
     value={db?.parameters?.username}
     validationMethods={{ onBlur: getValidation }}
     errorMessage={validationErrors?.username}
-    placeholder={t('e.g. Analytics')}
-    label={t('Username')}
+    placeholder="e.g. Analytics"
+    label="Username"
     onChange={changeMethods.onParametersChange}
   />
 );
@@ -126,8 +126,8 @@ export const passwordField = ({
     value={db?.parameters?.password}
     validationMethods={{ onBlur: getValidation }}
     errorMessage={validationErrors?.password}
-    placeholder={t('e.g. ********')}
-    label={t('Password')}
+    placeholder="e.g. ********"
+    label="Password"
     onChange={changeMethods.onParametersChange}
   />
 );
@@ -169,8 +169,8 @@ export const queryField = ({
     value={db?.query_input || ''}
     validationMethods={{ onBlur: getValidation }}
     errorMessage={validationErrors?.query}
-    placeholder={t('e.g. param1=value1&param2=value2')}
-    label={t('Additional Parameters')}
+    placeholder="e.g. param1=value1&param2=value2"
+    label="Additional Parameters"
     onChange={changeMethods.onQueryChange}
     helpText={t('Add additional custom parameters')}
   />

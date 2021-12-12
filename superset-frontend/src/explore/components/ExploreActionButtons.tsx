@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { ReactElement, useState } from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
-import { QueryFormData, t } from '@superset-ui/core';
+import { t } from '@superset-ui/core';
 import Icons from 'src/components/Icons';
 import { Tooltip } from 'src/components/Tooltip';
 import copyTextToClipboard from 'src/utils/copy';
@@ -27,15 +27,13 @@ import { useUrlShortener } from 'src/common/hooks/useUrlShortener';
 import EmbedCodeButton from './EmbedCodeButton';
 import { exportChart, getExploreLongUrl } from '../exploreUtils';
 import ExploreAdditionalActionsMenu from './ExploreAdditionalActionsMenu';
-import { ExportToCSVDropdown } from './ExportToCSVDropdown';
 
 type ActionButtonProps = {
-  prefixIcon: React.ReactElement;
-  suffixIcon?: React.ReactElement;
-  text?: string | ReactElement;
+  icon: React.ReactElement;
+  text?: string;
   tooltip: string;
   className?: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
+  onClick: React.MouseEventHandler<HTMLElement>;
   onTooltipVisibilityChange?: (visible: boolean) => void;
   'data-test'?: string;
 };
@@ -44,18 +42,15 @@ type ExploreActionButtonsProps = {
   actions: { redirectSQLLab: () => void; openPropertiesModal: () => void };
   canDownloadCSV: boolean;
   chartStatus: string;
-  latestQueryFormData: QueryFormData;
+  latestQueryFormData: {};
   queriesResponse: {};
   slice: { slice_name: string };
   addDangerToast: Function;
 };
 
-const VIZ_TYPES_PIVOTABLE = ['pivot_table', 'pivot_table_v2'];
-
 const ActionButton = (props: ActionButtonProps) => {
   const {
-    prefixIcon,
-    suffixIcon,
+    icon,
     text,
     tooltip,
     className,
@@ -64,7 +59,7 @@ const ActionButton = (props: ActionButtonProps) => {
   } = props;
   return (
     <Tooltip
-      id={`${prefixIcon}-tooltip`}
+      id={`${icon}-tooltip`}
       placement="top"
       title={tooltip}
       trigger={['hover']}
@@ -82,9 +77,8 @@ const ActionButton = (props: ActionButtonProps) => {
         style={{ height: 30 }}
         {...rest}
       >
-        {prefixIcon}
+        {icon}
         {text && <span style={{ marginLeft: 5 }}>{text}</span>}
-        {suffixIcon}
       </div>
     </Tooltip>
   );
@@ -135,14 +129,6 @@ const ExploreActionButtons = (props: ExploreActionButtonsProps) => {
       })
     : null;
 
-  const doExportCSVPivoted = canDownloadCSV
-    ? exportChart.bind(this, {
-        formData: latestQueryFormData,
-        resultType: 'post_processed',
-        resultFormat: 'csv',
-      })
-    : null;
-
   const doExportJson = exportChart.bind(this, {
     formData: latestQueryFormData,
     resultType: 'results',
@@ -162,7 +148,7 @@ const ExploreActionButtons = (props: ExploreActionButtonsProps) => {
       {latestQueryFormData && (
         <>
           <ActionButton
-            prefixIcon={<Icons.Link iconSize="l" />}
+            icon={<Icons.Link iconSize="l" />}
             tooltip={copyTooltip}
             onClick={doCopyLink}
             data-test="short-link-button"
@@ -171,47 +157,24 @@ const ExploreActionButtons = (props: ExploreActionButtonsProps) => {
             }
           />
           <ActionButton
-            prefixIcon={<Icons.Email iconSize="l" />}
+            icon={<Icons.Email iconSize="l" />}
             tooltip={t('Share chart by email')}
             onClick={doShareEmail}
           />
           <EmbedCodeButton latestQueryFormData={latestQueryFormData} />
           <ActionButton
-            prefixIcon={<Icons.FileTextOutlined iconSize="m" />}
+            icon={<Icons.FileTextOutlined iconSize="m" />}
             text=".JSON"
             tooltip={t('Export to .JSON format')}
             onClick={doExportJson}
           />
-          {VIZ_TYPES_PIVOTABLE.includes(latestQueryFormData.viz_type) ? (
-            <ExportToCSVDropdown
-              exportCSVOriginal={doExportCSV}
-              exportCSVPivoted={doExportCSVPivoted}
-            >
-              <ActionButton
-                prefixIcon={<Icons.FileExcelOutlined iconSize="m" />}
-                suffixIcon={
-                  <Icons.CaretDown
-                    iconSize="l"
-                    css={theme => `
-                    margin-left: ${theme.gridUnit}px;
-                    margin-right: ${-theme.gridUnit}px;
-                  `}
-                  />
-                }
-                text=".CSV"
-                tooltip={t('Export to .CSV format')}
-                className={exportToCSVClasses}
-              />
-            </ExportToCSVDropdown>
-          ) : (
-            <ActionButton
-              prefixIcon={<Icons.FileExcelOutlined iconSize="m" />}
-              text=".CSV"
-              tooltip={t('Export to .CSV format')}
-              onClick={doExportCSV}
-              className={exportToCSVClasses}
-            />
-          )}
+          <ActionButton
+            icon={<Icons.FileExcelOutlined iconSize="m" />}
+            text=".CSV"
+            tooltip={t('Export to .CSV format')}
+            onClick={doExportCSV}
+            className={exportToCSVClasses}
+          />
         </>
       )}
       <ExploreAdditionalActionsMenu

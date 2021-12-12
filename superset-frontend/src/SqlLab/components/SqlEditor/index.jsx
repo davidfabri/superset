@@ -82,14 +82,6 @@ const SET_QUERY_EDITOR_SQL_DEBOUNCE_MS = 2000;
 const VALIDATION_DEBOUNCE_MS = 600;
 const WINDOW_RESIZE_THROTTLE_MS = 100;
 
-const appContainer = document.getElementById('app');
-const bootstrapData = JSON.parse(
-  appContainer.getAttribute('data-bootstrap') || '{}',
-);
-const validatorMap =
-  bootstrapData?.common?.conf?.SQL_VALIDATORS_BY_ENGINE || {};
-const scheduledQueriesConf = bootstrapData?.common?.conf?.SCHEDULED_QUERIES;
-
 const LimitSelectStyled = styled.span`
   .ant-dropdown-trigger {
     align-items: center;
@@ -132,10 +124,6 @@ const StyledToolbar = styled.div`
         margin-right: 0;
       }
     }
-  }
-
-  .limitDropdown {
-    white-space: nowrap;
   }
 `;
 
@@ -192,8 +180,9 @@ class SqlEditor extends React.PureComponent {
     );
     this.queryPane = this.queryPane.bind(this);
     this.renderQueryLimit = this.renderQueryLimit.bind(this);
-    this.getAceEditorAndSouthPaneHeights =
-      this.getAceEditorAndSouthPaneHeights.bind(this);
+    this.getAceEditorAndSouthPaneHeights = this.getAceEditorAndSouthPaneHeights.bind(
+      this,
+    );
     this.getSqlEditorHeight = this.getSqlEditorHeight.bind(this);
     this.requestValidation = debounce(
       this.requestValidation.bind(this),
@@ -399,7 +388,8 @@ class SqlEditor extends React.PureComponent {
   canValidateQuery() {
     // Check whether or not we can validate the current query based on whether
     // or not the backend has a validator configured for it.
-    if (this.props.database) {
+    const validatorMap = window.featureFlags.SQL_VALIDATORS_BY_ENGINE;
+    if (this.props.database && validatorMap != null) {
       return validatorMap.hasOwnProperty(this.props.database.backend);
     }
     return false;
@@ -462,12 +452,14 @@ class SqlEditor extends React.PureComponent {
 
   queryPane() {
     const hotkeys = this.getHotkeyConfig();
-    const { aceEditorHeight, southPaneHeight } =
-      this.getAceEditorAndSouthPaneHeights(
-        this.state.height,
-        this.state.northPercent,
-        this.state.southPercent,
-      );
+    const {
+      aceEditorHeight,
+      southPaneHeight,
+    } = this.getAceEditorAndSouthPaneHeights(
+      this.state.height,
+      this.state.northPercent,
+      this.state.southPercent,
+    );
     return (
       <Split
         expandToMin
@@ -538,7 +530,7 @@ class SqlEditor extends React.PureComponent {
             />
           </Menu.Item>
         )}
-        {scheduledQueriesConf && (
+        {isFeatureEnabled(FeatureFlag.SCHEDULED_QUERIES) && (
           <Menu.Item>
             <ScheduleQueryButton
               defaultLabel={qe.title}
@@ -654,7 +646,7 @@ class SqlEditor extends React.PureComponent {
               <Dropdown overlay={this.renderQueryLimit()} trigger="click">
                 <a onClick={e => e.preventDefault()}>
                   <span>LIMIT:</span>
-                  <span className="limitDropdown">
+                  <span>
                     {this.convertToNumWithSpaces(
                       this.props.queryEditor.queryLimit ||
                         this.props.defaultQueryLimit,

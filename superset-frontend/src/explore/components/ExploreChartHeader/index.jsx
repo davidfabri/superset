@@ -44,7 +44,6 @@ import Timer from 'src/components/Timer';
 import CachedLabel from 'src/components/CachedLabel';
 import PropertiesModal from 'src/explore/components/PropertiesModal';
 import { sliceUpdated } from 'src/explore/actions/exploreActions';
-import CertifiedBadge from 'src/components/CertifiedBadge';
 import ExploreActionButtons from '../ExploreActionButtons';
 import RowCountLabel from '../RowCountLabel';
 
@@ -143,39 +142,30 @@ export class ExploreChartHeader extends React.PureComponent {
 
   async fetchChartDashboardData() {
     const { dashboardId, slice } = this.props;
-    await SupersetClient.get({
+    const response = await SupersetClient.get({
       endpoint: `/api/v1/chart/${slice.slice_id}`,
-    })
-      .then(res => {
-        const response = res?.json?.result;
-        if (response && response.dashboards && response.dashboards.length) {
-          const { dashboards } = response;
-          const dashboard =
-            dashboardId &&
-            dashboards.length &&
-            dashboards.find(d => d.id === dashboardId);
+    });
+    const chart = response.json.result;
+    const dashboards = chart.dashboards || [];
+    const dashboard =
+      dashboardId &&
+      dashboards.length &&
+      dashboards.find(d => d.id === dashboardId);
 
-          if (dashboard && dashboard.json_metadata) {
-            // setting the chart to use the dashboard custom label colors if any
-            const labelColors =
-              JSON.parse(dashboard.json_metadata).label_colors || {};
-            const categoricalNamespace =
-              CategoricalColorNamespace.getNamespace();
+    if (dashboard && dashboard.json_metadata) {
+      // setting the chart to use the dashboard custom label colors if any
+      const labelColors =
+        JSON.parse(dashboard.json_metadata).label_colors || {};
+      const categoricalNamespace = CategoricalColorNamespace.getNamespace();
 
-            Object.keys(labelColors).forEach(label => {
-              categoricalNamespace.setColor(label, labelColors[label]);
-            });
-          }
-        }
-      })
-      .catch(() => {});
+      Object.keys(labelColors).forEach(label => {
+        categoricalNamespace.setColor(label, labelColors[label]);
+      });
+    }
   }
 
   getSliceName() {
-    const { sliceName, table_name: tableName } = this.props;
-    const title = sliceName || t('%s - untitled', tableName);
-
-    return title;
+    return this.props.sliceName || t('%s - untitled', this.props.table_name);
   }
 
   postChartFormData() {
@@ -237,7 +227,7 @@ export class ExploreChartHeader extends React.PureComponent {
       return false;
     }
     const { user } = this.props;
-    if (!user?.userId) {
+    if (!user) {
       // this is in the case that there is an anonymous user.
       return false;
     }
@@ -251,7 +241,7 @@ export class ExploreChartHeader extends React.PureComponent {
   }
 
   render() {
-    const { user, form_data: formData, slice } = this.props;
+    const { user, form_data: formData } = this.props;
     const {
       chartStatus,
       chartUpdateEndTime,
@@ -267,14 +257,6 @@ export class ExploreChartHeader extends React.PureComponent {
     return (
       <StyledHeader id="slice-header" className="panel-title-large">
         <div className="title-panel">
-          {slice?.certified_by && (
-            <>
-              <CertifiedBadge
-                certifiedBy={slice.certified_by}
-                details={slice.certification_details}
-              />{' '}
-            </>
-          )}
           <EditableTitle
             title={this.getSliceName()}
             canEdit={

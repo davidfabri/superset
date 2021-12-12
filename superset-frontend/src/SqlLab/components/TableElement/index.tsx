@@ -77,7 +77,6 @@ const Fade = styled.div`
 const TableElement = ({ table, actions, ...props }: TableElementProps) => {
   const [sortColumns, setSortColumns] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const tableNameRef = React.useRef<HTMLInputElement>(null);
 
   const setHover = (hovered: boolean) => {
     debounce(() => setHovered(hovered), 100)();
@@ -214,50 +213,39 @@ const TableElement = ({ table, actions, ...props }: TableElementProps) => {
     );
   };
 
-  const renderHeader = () => {
-    const element: HTMLInputElement | null = tableNameRef.current;
-    let trigger: string[] = [];
-    if (element && element.offsetWidth < element.scrollWidth) {
-      trigger = ['hover'];
-    }
-
-    return (
-      <div
-        className="clearfix header-container"
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+  const renderHeader = () => (
+    <div
+      className="clearfix header-container"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <Tooltip
+        id="copy-to-clipboard-tooltip"
+        placement="topLeft"
+        style={{ cursor: 'pointer' }}
+        title={table.name}
+        trigger={['hover']}
       >
-        <Tooltip
-          id="copy-to-clipboard-tooltip"
-          style={{ cursor: 'pointer' }}
-          title={table.name}
-          trigger={trigger}
-        >
-          <StyledSpan
-            data-test="collapse"
-            ref={tableNameRef}
-            className="table-name"
-          >
-            <strong>{table.name}</strong>
-          </StyledSpan>
-        </Tooltip>
+        <StyledSpan data-test="collapse" className="table-name">
+          <strong>{table.name}</strong>
+        </StyledSpan>
+      </Tooltip>
 
-        <div className="pull-right header-right-side">
-          {table.isMetadataLoading || table.isExtraMetadataLoading ? (
-            <Loading position="inline" />
-          ) : (
-            <Fade
-              data-test="fade"
-              hovered={hovered}
-              onClick={e => e.stopPropagation()}
-            >
-              {renderControls()}
-            </Fade>
-          )}
-        </div>
+      <div className="pull-right header-right-side">
+        {table.isMetadataLoading || table.isExtraMetadataLoading ? (
+          <Loading position="inline" />
+        ) : (
+          <Fade
+            data-test="fade"
+            hovered={hovered}
+            onClick={e => e.stopPropagation()}
+          >
+            {renderControls()}
+          </Fade>
+        )}
       </div>
-    );
-  };
+    </div>
+  );
 
   const renderBody = () => {
     let cols;

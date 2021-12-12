@@ -64,8 +64,6 @@ published_description = (
 charts_description = (
     "The names of the dashboard's charts. Names are used for legacy reasons."
 )
-certified_by_description = "Person or group that has certified this dashboard"
-certification_details_description = "Details of the certification"
 
 openapi_spec_methods_override = {
     "get": {"get": {"description": "Get a dashboard detail information."}},
@@ -125,8 +123,6 @@ class DashboardJSONMetadataSchema(Schema):
     stagger_refresh = fields.Boolean()
     stagger_time = fields.Integer()
     color_scheme = fields.Str(allow_none=True)
-    color_namespace = fields.Str(allow_none=True)
-    positions = fields.Dict(allow_none=True)
     label_colors = fields.Dict()
     # used for v0 import/export
     import_time = fields.Integer()
@@ -155,8 +151,6 @@ class DashboardGetResponseSchema(Schema):
     css = fields.String(description=css_description)
     json_metadata = fields.String(description=json_metadata_description)
     position_json = fields.String(description=position_json_description)
-    certified_by = fields.String(description=certified_by_description)
-    certification_details = fields.String(description=certification_details_description)
     changed_by_name = fields.String()
     changed_by_url = fields.String()
     changed_by = fields.Nested(UserSchema)
@@ -243,10 +237,6 @@ class DashboardPostSchema(BaseDashboardSchema):
         description=json_metadata_description, validate=validate_json_metadata,
     )
     published = fields.Boolean(description=published_description)
-    certified_by = fields.String(description=certified_by_description, allow_none=True)
-    certification_details = fields.String(
-        description=certification_details_description, allow_none=True
-    )
 
 
 class DashboardPutSchema(BaseDashboardSchema):
@@ -272,10 +262,6 @@ class DashboardPutSchema(BaseDashboardSchema):
         validate=validate_json_metadata,
     )
     published = fields.Boolean(description=published_description, allow_none=True)
-    certified_by = fields.String(description=certified_by_description, allow_none=True)
-    certification_details = fields.String(
-        description=certification_details_description, allow_none=True
-    )
 
 
 class ChartFavStarResponseResult(Schema):
